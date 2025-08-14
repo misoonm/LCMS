@@ -1,1 +1,1007 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحامي عادل يحيى - نظام إدارة القضايا</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a365d;
+            --secondary: #2c5282;
+            --accent: #e53e3e;
+            --light: #f7fafc;
+            --dark: #1a202c;
+            --success: #38a169;
+            --warning: #dd6b20;
+            --info: #3182ce;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* التصميم العصري للشريط العلوي */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--box-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-links a i {
+            font-size: 1.2rem;
+        }
+
+        /* تصميم بطاقات الإحصائيات */
+        .stats-section {
+            padding: 40px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: var(--primary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            transition: var(--transition);
+            border-top: 4px solid var(--primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card.total {
+            border-top-color: var(--info);
+        }
+
+        .stat-card.active {
+            border-top-color: var(--warning);
+        }
+
+        .stat-card.completed {
+            border-top-color: var(--success);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .stat-card.total .stat-icon {
+            color: var(--info);
+        }
+
+        .stat-card.active .stat-icon {
+            color: var(--warning);
+        }
+
+        .stat-card.completed .stat-icon {
+            color: var(--success);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+
+        /* تصميم أدوات البحث والفلترة */
+        .tools-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 40px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 15px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.2);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+            font-size: 1.2rem;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: #c53030;
+        }
+
+        /* تصميم جدول القضايا */
+        .cases-section {
+            margin-bottom: 50px;
+        }
+
+        .cases-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+
+        .cases-table th {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .cases-table td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cases-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cases-table tr:hover td {
+            background: #f8fafc;
+        }
+
+        .case-id {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .case-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .criminal {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .commercial {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .personal {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+
+        .case-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .new {
+            background: #ebf8ff;
+            color: #2b6cb0;
+        }
+
+        .in-progress {
+            background: #fffaf0;
+            color: #dd6b20;
+        }
+
+        .closed {
+            background: #f0fff4;
+            color: #2f855a;
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #cbd5e0;
+            transition: var(--transition);
+        }
+
+        .favorite-btn.favorited {
+            color: #ecc94b;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            color: var(--accent);
+        }
+
+        /* تصميم نموذج إضافة قضية */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: modalOpen 0.4s ease;
+        }
+
+        @keyframes modalOpen {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+
+        .file-upload i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .file-upload p {
+            color: #718096;
+            margin-bottom: 5px;
+        }
+
+        .file-upload span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-lg {
+            padding: 14px 30px;
+            font-size: 1.1rem;
+        }
+
+        /* تصميم متجاوب */
+        @media (max-width: 992px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stat-value {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.7rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+        }
+
+        /* تصميم القائمة الجانبية للجوال */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: var(--transition);
+            padding-top: 70px;
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-nav-links a {
+            padding: 15px 25px;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #eee;
+            transition: var(--transition);
+        }
+
+        .mobile-nav-links a:hover, .mobile-nav-links a.active {
+            background: #f7fafc;
+            color: var(--primary);
+        }
+
+        .mobile-nav-links a i {
+            font-size: 1.2rem;
+            width: 25px;
+        }
+
+        /* إضافة بعض الرسوم المتحركة */
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- الشريط العلوي -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div style="background: #e2e8f0; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-balance-scale" style="font-size: 2rem; color: var(--primary);"></i>
+                    </div>
+                    <h1>المحامي عادل يحيى</h1>
+                </div>
+                
+                <nav class="nav-links">
+                    <a href="#" class="active"><i class="fas fa-home"></i> الرئيسية</a>
+                    <a href="#"><i class="fas fa-gavel"></i> القضايا</a>
+                    <a href="#"><i class="fas fa-calendar"></i> المواعيد</a>
+                    <a href="#"><i class="fas fa-file-contract"></i> المستندات</a>
+                    <a href="#"><i class="fas fa-user"></i> العملاء</a>
+                    <a href="#"><i class="fas fa-cog"></i> الإعدادات</a>
+                </nav>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- القائمة الجانبية للجوال -->
+    <div class="mobile-nav">
+        <div class="mobile-nav-links">
+            <a href="#" class="active"><i class="fas fa-home"></i> الرئيسية</a>
+            <a href="#"><i class="fas fa-gavel"></i> القضايا</a>
+            <a href="#"><i class="fas fa-calendar"></i> المواعيد</a>
+            <a href="#"><i class="fas fa-file-contract"></i> المستندات</a>
+            <a href="#"><i class="fas fa-user"></i> العملاء</a>
+            <a href="#"><i class="fas fa-cog"></i> الإعدادات</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- إحصائيات القضايا -->
+        <section class="stats-section fade-in">
+            <h2 class="section-title">نظرة عامة على القضايا</h2>
+            <div class="stats-container">
+                <div class="stat-card total">
+                    <i class="fas fa-folder-open stat-icon"></i>
+                    <div class="stat-value">142</div>
+                    <div class="stat-label">إجمالي القضايا</div>
+                </div>
+                
+                <div class="stat-card active">
+                    <i class="fas fa-tasks stat-icon"></i>
+                    <div class="stat-value">85</div>
+                    <div class="stat-label">قضايا نشطة</div>
+                </div>
+                
+                <div class="stat-card completed">
+                    <i class="fas fa-check-circle stat-icon"></i>
+                    <div class="stat-value">57</div>
+                    <div class="stat-label">قضايا مكتملة</div>
+                </div>
+            </div>
+            
+            <!-- أدوات البحث والفلترة -->
+            <div class="tools-section fade-in">
+                <div class="tools-grid">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="ابحث باسم صاحب القضية أو رقمها...">
+                    </div>
+                    
+                    <button class="btn btn-primary">
+                        <i class="fas fa-filter"></i> فلترة القضايا
+                    </button>
+                    
+                    <button class="btn btn-accent" id="newCaseBtn">
+                        <i class="fas fa-plus"></i> تسجيل قضية جديدة
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- جدول القضايا -->
+        <section class="cases-section fade-in">
+            <h2 class="section-title">قائمة القضايا</h2>
+            <div style="overflow-x: auto;">
+                <table class="cases-table">
+                    <thead>
+                        <tr>
+                            <th>رقم القضية</th>
+                            <th>صاحب القضية</th>
+                            <th>نوع القضية</th>
+                            <th>المحكمة</th>
+                            <th>القاضي</th>
+                            <th>الحالة</th>
+                            <th>تاريخ التسجيل</th>
+                            <th>مفضلة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="case-id">#C-2023-145</td>
+                            <td>محمد أحمد عبد الله</td>
+                            <td><span class="case-type criminal">جنائية</span></td>
+                            <td>محكمة جنايات القاهرة</td>
+                            <td>القاضي سامي محمد</td>
+                            <td><span class="case-status in-progress"><i class="fas fa-spinner"></i> قيد النظر</span></td>
+                            <td>12/03/2023</td>
+                            <td><button class="favorite-btn favorited"><i class="fas fa-star"></i></button></td>
+                            <td>
+                                <button class="action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="case-id">#C-2023-128</td>
+                            <td>شركة التقنية المتطورة</td>
+                            <td><span class="case-type commercial">تجارية</span></td>
+                            <td>محكمة التجارية</td>
+                            <td>القاضي أحمد محمود</td>
+                            <td><span class="case-status new"><i class="fas fa-file"></i> جديدة</span></td>
+                            <td>05/03/2023</td>
+                            <td><button class="favorite-btn"><i class="fas fa-star"></i></button></td>
+                            <td>
+                                <button class="action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="case-id">#C-2023-112</td>
+                            <td>سارة خالد حسين</td>
+                            <td><span class="case-type personal">أحوال شخصية</span></td>
+                            <td>محكمة الأسرة</td>
+                            <td>القاضي نادية عبد الرحمن</td>
+                            <td><span class="case-status closed"><i class="fas fa-check"></i> منتهية</span></td>
+                            <td>22/02/2023</td>
+                            <td><button class="favorite-btn"><i class="fas fa-star"></i></button></td>
+                            <td>
+                                <button class="action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="case-id">#C-2023-098</td>
+                            <td>عبد الرحمن سعيد</td>
+                            <td><span class="case-type criminal">جنائية</span></td>
+                            <td>محكمة جنايات الإسكندرية</td>
+                            <td>القاضي وليد عبد الفتاح</td>
+                            <td><span class="case-status in-progress"><i class="fas fa-spinner"></i> قيد النظر</span></td>
+                            <td>15/02/2023</td>
+                            <td><button class="favorite-btn favorited"><i class="fas fa-star"></i></button></td>
+                            <td>
+                                <button class="action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="case-id">#C-2023-076</td>
+                            <td>مؤسسة النهضة العقارية</td>
+                            <td><span class="case-type commercial">تجارية</span></td>
+                            <td>محكمة التجارية</td>
+                            <td>القاضي محمد السيد</td>
+                            <td><span class="case-status closed"><i class="fas fa-check"></i> مغلقة</span></td>
+                            <td>03/02/2023</td>
+                            <td><button class="favorite-btn"><i class="fas fa-star"></i></button></td>
+                            <td>
+                                <button class="action-btn"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- نموذج إضافة قضية جديدة (يظهر في مودال) -->
+    <div class="modal" id="caseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">تسجيل قضية جديدة</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="caseForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="caseId">رقم القضية (ID)</label>
+                            <input type="text" id="caseId" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clientName">اسم صاحب القضية</label>
+                            <input type="text" id="clientName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="court">المحكمة</label>
+                            <input type="text" id="court" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="judge">اسم القاضي</label>
+                            <input type="text" id="judge">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="caseType">نوع القضية</label>
+                            <select id="caseType" required>
+                                <option value="">اختر نوع القضية</option>
+                                <option value="جنائية">جنائية</option>
+                                <option value="تجارية">تجارية</option>
+                                <option value="أحوال شخصية">أحوال شخصية</option>
+                                <option value="مدنية">مدنية</option>
+                                <option value="إدارية">إدارية</option>
+                                <option value="دستورية">دستورية</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="caseStatus">حالة القضية</label>
+                            <select id="caseStatus" required>
+                                <option value="">اختر حالة القضية</option>
+                                <option value="جديدة">جديدة</option>
+                                <option value="قيد النظر">قيد النظر</option>
+                                <option value="منتهية">منتهية</option>
+                                <option value="مغلقة">مغلقة</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="registrationDate">تاريخ التسجيل</label>
+                            <input type="date" id="registrationDate" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="updateDate">تاريخ آخر تحديث</label>
+                            <input type="date" id="updateDate">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="isFavorite"> 
+                                علامة مفضلة
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">وصف تفصيلي</label>
+                        <textarea id="description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>رفع مستندات القضية</label>
+                        <div class="file-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>اسحب وأسقط الملفات هنا أو</p>
+                            <span>تصفح الملفات</span>
+                            <input type="file" multiple style="display: none;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-lg" id="cancelBtn">إلغاء</button>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save"></i> حفظ القضية
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // فتح وإغلاق نموذج القضية
+        const newCaseBtn = document.getElementById('newCaseBtn');
+        const caseModal = document.getElementById('caseModal');
+        const closeModal = document.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const caseForm = document.getElementById('caseForm');
+        
+        newCaseBtn.addEventListener('click', () => {
+            caseModal.classList.add('active');
+        });
+        
+        closeModal.addEventListener('click', () => {
+            caseModal.classList.remove('active');
+        });
+        
+        cancelBtn.addEventListener('click', () => {
+            caseModal.classList.remove('active');
+        });
+        
+        // إغلاق النموذج عند النقر خارج المحتوى
+        window.addEventListener('click', (e) => {
+            if (e.target === caseModal) {
+                caseModal.classList.remove('active');
+            }
+        });
+        
+        // معالجة إرسال النموذج
+        caseForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('تم حفظ القضية بنجاح!');
+            caseModal.classList.remove('active');
+            caseForm.reset();
+        });
+        
+        // إدارة المفضلة
+        const favoriteBtns = document.querySelectorAll('.favorite-btn');
+        favoriteBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('favorited');
+            });
+        });
+        
+        // القائمة الجانبية للجوال
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileNav = document.querySelector('.mobile-nav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileNav.classList.toggle('active');
+        });
+        
+        // إضافة تأثيرات عند التمرير
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            } else {
+                header.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }
+        });
+        
+        // تعيين التاريخ الحالي افتراضيًا
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('registrationDate').value = today;
+        document.getElementById('updateDate').value = today;
+    </script>
+</body>
+</html>
