@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحامي عادل يحيى - نظام إدارة القضايا</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* أبقى التصميم كما هو */
+    </style>
+</head>
+<body>
+    <!-- الشريط العلوي -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div style="background: #e2e8f0; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-balance-scale" style="font-size: 2rem; color: var(--primary);"></i>
+                    </div>
+                    <h1>المحامي عادل يحيى</h1>
+                </div>
+                
+                <nav class="nav-links">
+                    <a href="#" class="active"><i class="fas fa-home"></i> الرئيسية</a>
+                    <a href="#"><i class="fas fa-gavel"></i> القضايا</a>
+                    <a href="#"><i class="fas fa-calendar"></i> المواعيد</a>
+                    <a href="#"><i class="fas fa-file-contract"></i> المستندات</a>
+                    <a href="#"><i class="fas fa-user"></i> العملاء</a>
+                    <a href="#"><i class="fas fa-cog"></i> الإعدادات</a>
+                    <button class="favorites-btn">
+                        <i class="fas fa-star"></i>
+                        <span class="favorites-count">0</span>
+                    </button>
+                </nav>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- القائمة الجانبية للجوال -->
+    <div class="mobile-nav">
+        <div class="mobile-nav-links">
+            <a href="#" class="active"><i class="fas fa-home"></i> الرئيسية</a>
+            <a href="#"><i class="fas fa-gavel"></i> القضايا</a>
+            <a href="#"><i class="fas fa-calendar"></i> المواعيد</a>
+            <a href="#"><i class="fas fa-file-contract"></i> المستندات</a>
+            <a href="#"><i class="fas fa-user"></i> العملاء</a>
+            <a href="#"><i class="fas fa-cog"></i> الإعدادات</a>
+            <a href="#"><i class="fas fa-star"></i> المفضلة</a>
+        </div>
+    </div>
+
+    <!-- مؤشر التحميل -->
+    <div class="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <div class="container">
+        <!-- إحصائيات القضايا -->
+        <section class="stats-section fade-in">
+            <h2 class="section-title">نظرة عامة على القضايا</h2>
+            <div class="stats-container">
+                <div class="stat-card total" id="totalCasesCard">
+                    <i class="fas fa-folder-open stat-icon"></i>
+                    <div class="stat-value" id="totalCases">0</div>
+                    <div class="stat-label">إجمالي القضايا</div>
+                </div>
+                
+                <div class="stat-card active" id="activeCasesCard">
+                    <i class="fas fa-tasks stat-icon"></i>
+                    <div class="stat-value" id="activeCases">0</div>
+                    <div class="stat-label">قضايا نشطة</div>
+                </div>
+                
+                <div class="stat-card completed" id="completedCasesCard">
+                    <i class="fas fa-check-circle stat-icon"></i>
+                    <div class="stat-value" id="completedCases">0</div>
+                    <div class="stat-label">قضايا مكتملة</div>
+                </div>
+            </div>
+            
+            <!-- أدوات البحث والفلترة -->
+            <div class="tools-section fade-in">
+                <div class="tools-grid">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="ابحث باسم صاحب القضية أو رقمها...">
+                    </div>
+                    
+                    <button class="btn btn-primary" id="filterBtn">
+                        <i class="fas fa-filter"></i> فلترة القضايا
+                    </button>
+                    
+                    <button class="btn btn-accent" id="newCaseBtn">
+                        <i class="fas fa-plus"></i> تسجيل قضية جديدة
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- جدول القضايا -->
+        <section class="cases-section fade-in">
+            <h2 class="section-title">قائمة القضايا</h2>
+            <div style="overflow-x: auto;">
+                <table class="cases-table">
+                    <thead>
+                        <tr>
+                            <th>رقم القضية</th>
+                            <th>صاحب القضية</th>
+                            <th>نوع القضية</th>
+                            <th>المحكمة</th>
+                            <th>القاضي</th>
+                            <th>الحالة</th>
+                            <th>تاريخ التسجيل</th>
+                            <th>مفضلة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="casesTableBody">
+                        <!-- سيتم ملء البيانات من قاعدة البيانات -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- نموذج إضافة قضية جديدة -->
+    <div class="modal" id="caseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">تسجيل قضية جديدة</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="caseForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="caseId">رقم القضية (ID)</label>
+                            <input type="text" id="caseId" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clientName">اسم صاحب القضية</label>
+                            <input type="text" id="clientName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="court">المحكمة</label>
+                            <input type="text" id="court" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="judge">اسم القاضي</label>
+                            <input type="text" id="judge">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="caseType">نوع القضية</label>
+                            <select id="caseType" required>
+                                <option value="">اختر نوع القضية</option>
+                                <option value="جنائية">جنائية</option>
+                                <option value="تجارية">تجارية</option>
+                                <option value="أحوال شخصية">أحوال شخصية</option>
+                                <option value="مدنية">مدنية</option>
+                                <option value="إدارية">إدارية</option>
+                                <option value="دستورية">دستورية</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="caseStatus">حالة القضية</label>
+                            <select id="caseStatus" required>
+                                <option value="">اختر حالة القضية</option>
+                                <option value="جديدة">جديدة</option>
+                                <option value="قيد النظر">قيد النظر</option>
+                                <option value="منتهية">منتهية</option>
+                                <option value="مغلقة">مغلقة</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="registrationDate">تاريخ التسجيل</label>
+                            <input type="date" id="registrationDate" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="updateDate">تاريخ آخر تحديث</label>
+                            <input type="date" id="updateDate">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="isFavorite"> 
+                                علامة مفضلة
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">وصف تفصيلي</label>
+                        <textarea id="description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>رفع مستندات القضية</label>
+                        <div class="file-upload" id="fileUpload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>اسحب وأسقط الملفات هنا أو</p>
+                            <span>تصفح الملفات</span>
+                            <input type="file" id="caseFiles" multiple style="display: none;">
+                        </div>
+                        <div id="fileList" class="form-group"></div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-lg" id="cancelBtn">إلغاء</button>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save"></i> حفظ القضية
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- نموذج فلترة القضايا -->
+    <div class="filter-modal" id="filterModal">
+        <div class="filter-content">
+            <div class="filter-header">
+                <h3 class="filter-title">فلترة القضايا</h3>
+                <button class="filter-close" id="filterClose">&times;</button>
+            </div>
+            
+            <div class="filter-options">
+                <!-- تم إزالة محتوى الفلترة للاختصار -->
+            </div>
+            
+            <div class="filter-actions">
+                <button class="btn" id="resetFilters">إعادة تعيين</button>
+                <button class="btn btn-primary" id="applyFilters">تطبيق الفلتر</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const casesTableBody = document.getElementById('casesTableBody');
+        const totalCasesElement = document.getElementById('totalCases');
+        const activeCasesElement = document.getElementById('activeCases');
+        const completedCasesElement = document.getElementById('completedCases');
+        const searchInput = document.getElementById('searchInput');
+        const newCaseBtn = document.getElementById('newCaseBtn');
+        const filterBtn = document.getElementById('filterBtn');
+        const caseModal = document.getElementById('caseModal');
+        const filterModal = document.getElementById('filterModal');
+        const caseForm = document.getElementById('caseForm');
+        const fileUpload = document.getElementById('fileUpload');
+        const caseFiles = document.getElementById('caseFiles');
+        const fileList = document.getElementById('fileList');
+        const favoritesCount = document.querySelector('.favorites-count');
+        const loader = document.querySelector('.loader');
+
+        // عنوان API الخادوم (يجب استبداله بعنوان الخادوم الحقيقي)
+        const API_URL = 'https://your-api-domain.com/api';
+
+        // بيانات القضايا (سيتم ملؤها من قاعدة البيانات)
+        let cases = [];
+
+        // جلب القضايا من قاعدة البيانات
+        async function fetchCases() {
+            try {
+                loader.classList.add('active');
+                const response = await fetch(`${API_URL}/cases`);
+                const data = await response.json();
+                cases = data;
+                renderCases();
+                updateStats();
+                loader.classList.remove('active');
+            } catch (error) {
+                console.error('Error fetching cases:', error);
+                loader.classList.remove('active');
+                alert('حدث خطأ أثناء جلب البيانات. الرجاء المحاولة لاحقًا.');
+            }
+        }
+
+        // إضافة قضية جديدة إلى قاعدة البيانات
+        async function addCase(newCase) {
+            try {
+                loader.classList.add('active');
+                const response = await fetch(`${API_URL}/cases`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newCase)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const result = await response.json();
+                cases.push(result);
+                renderCases();
+                updateStats();
+                caseModal.classList.remove('active');
+                caseForm.reset();
+                fileList.innerHTML = '';
+                loader.classList.remove('active');
+                alert('تم حفظ القضية بنجاح!');
+            } catch (error) {
+                console.error('Error adding case:', error);
+                loader.classList.remove('active');
+                alert('حدث خطأ أثناء حفظ القضية. الرجاء المحاولة مرة أخرى.');
+            }
+        }
+
+        // تحديث حالة المفضلة في قاعدة البيانات
+        async function toggleFavorite(id, favorite) {
+            try {
+                const response = await fetch(`${API_URL}/cases/${id}/favorite`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ favorite })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const result = await response.json();
+                const caseIndex = cases.findIndex(c => c.id === id);
+                if (caseIndex !== -1) {
+                    cases[caseIndex] = result;
+                }
+                renderCases();
+                updateStats();
+            } catch (error) {
+                console.error('Error updating favorite status:', error);
+                alert('حدث خطأ أثناء تحديث الحالة. الرجاء المحاولة مرة أخرى.');
+            }
+        }
+
+        // تحديث الإحصائيات
+        function updateStats() {
+            const total = cases.length;
+            const active = cases.filter(c => c.status === "قيد النظر" || c.status === "جديدة").length;
+            const completed = cases.filter(c => c.status === "منتهية" || c.status === "مغلقة").length;
+            const favorites = cases.filter(c => c.favorite).length;
+            
+            totalCasesElement.textContent = total;
+            activeCasesElement.textContent = active;
+            completedCasesElement.textContent = completed;
+            favoritesCount.textContent = favorites;
+        }
+
+        // عرض القضايا في الجدول
+        function renderCases() {
+            casesTableBody.innerHTML = '';
+            
+            cases.forEach(c => {
+                const row = document.createElement('tr');
+                
+                // تحديد لون النوع والحالة
+                let typeClass = '';
+                if (c.type === "جنائية") typeClass = 'criminal';
+                else if (c.type === "تجارية") typeClass = 'commercial';
+                else if (c.type === "أحوال شخصية") typeClass = 'personal';
+                
+                let statusClass = '';
+                if (c.status === "جديدة") statusClass = 'new';
+                else if (c.status === "قيد النظر") statusClass = 'in-progress';
+                else if (c.status === "منتهية" || c.status === "مغلقة") statusClass = 'closed';
+                
+                row.innerHTML = `
+                    <td class="case-id">${c.id}</td>
+                    <td>${c.client_name}</td>
+                    <td><span class="case-type ${typeClass}">${c.type}</span></td>
+                    <td>${c.court}</td>
+                    <td>${c.judge || 'غير محدد'}</td>
+                    <td><span class="case-status ${statusClass}">
+                        ${c.status === "قيد النظر" ? '<i class="fas fa-spinner"></i>' : 
+                          c.status === "جديدة" ? '<i class="fas fa-file"></i>' : 
+                          '<i class="fas fa-check"></i>'} 
+                        ${c.status}
+                    </span></td>
+                    <td>${formatDate(c.registration_date)}</td>
+                    <td><button class="favorite-btn ${c.favorite ? 'favorited' : ''}" data-id="${c.id}">
+                        <i class="fas fa-star"></i>
+                    </button></td>
+                    <td>
+                        <button class="action-btn"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                
+                casesTableBody.appendChild(row);
+            });
+            
+            // إضافة أحداث للمفضلة
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    const isFavorite = !btn.classList.contains('favorited');
+                    toggleFavorite(id, isFavorite);
+                });
+            });
+        }
+
+        // تنسيق التاريخ
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        }
+
+        // إدارة رفع الملفات
+        fileUpload.addEventListener('click', () => {
+            caseFiles.click();
+        });
+
+        caseFiles.addEventListener('change', () => {
+            fileList.innerHTML = '';
+            if (caseFiles.files.length > 0) {
+                fileList.innerHTML = '<p><strong>الملفات المختارة:</strong></p>';
+                for (let i = 0; i < caseFiles.files.length; i++) {
+                    fileList.innerHTML += `<p>${caseFiles.files[i].name}</p>`;
+                }
+            }
+        });
+
+        // معالجة إرسال نموذج القضية
+        caseForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const newCase = {
+                id: document.getElementById('caseId').value,
+                client_name: document.getElementById('clientName').value,
+                court: document.getElementById('court').value,
+                judge: document.getElementById('judge').value || null,
+                type: document.getElementById('caseType').value,
+                status: document.getElementById('caseStatus').value,
+                registration_date: document.getElementById('registrationDate').value,
+                update_date: document.getElementById('updateDate').value || document.getElementById('registrationDate').value,
+                favorite: document.getElementById('isFavorite').checked,
+                description: document.getElementById('description').value || ''
+            };
+            
+            addCase(newCase);
+        });
+
+        // البحث عن القضايا
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const rows = casesTableBody.querySelectorAll('tr');
+            
+            rows.forEach(row => {
+                const caseId = row.querySelector('.case-id').textContent.toLowerCase();
+                const clientName = row.cells[1].textContent.toLowerCase();
+                
+                if (caseId.includes(searchTerm) || clientName.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // فتح وإغلاق النماذج
+        newCaseBtn.addEventListener('click', () => {
+            caseModal.classList.add('active');
+            // تعيين التاريخ الحالي
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('registrationDate').value = today;
+            document.getElementById('updateDate').value = today;
+        });
+
+        filterBtn.addEventListener('click', () => {
+            filterModal.classList.add('active');
+        });
+
+        document.querySelectorAll('.close-modal, #cancelBtn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                caseModal.classList.remove('active');
+            });
+        });
+
+        document.getElementById('filterClose').addEventListener('click', () => {
+            filterModal.classList.remove('active');
+        });
+
+        // تهيئة التطبيق عند التحميل
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchCases();
+        });
+    </script>
+</body>
+</html>
